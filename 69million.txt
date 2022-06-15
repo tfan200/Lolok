@@ -1,0 +1,131 @@
+from numpy.ma.core import correlate
+from google.colab import files 
+dataToUpload = files.upload()
+
+import pandas as pd
+import statistics
+import plotly.graph_objects as go 
+import plotly.figure_factory as ff
+import plotly.express as px
+import random 
+import numpy as umom
+import csv 
+import seaborn as sns 
+
+df = pd.read_csv("SussyMone.csv")
+
+#fig= px.scatter(df, y = "quant_saved", color = "rem_any")
+
+with open("SussyMone.csv",newline = "") as drugMone:
+  reader = csv.reader(drugMone)
+  savingsData = list(reader) 
+savingsData.pop(0)
+nick = len(savingsData)
+ReminderToTakeDrugs = 0
+for i in savingsData :
+  if int(i[3]) == 1: 
+    ReminderToTakeDrugs += 1
+fig = go.Figure(go.Bar(x = ["Reminder", "Not Reminded"],y = [ReminderToTakeDrugs,(nick-ReminderToTakeDrugs)]))
+fig.show()
+print(ReminderToTakeDrugs)
+
+AllDrugs = []
+for javeline in savingsData:
+  AllDrugs.append(float(javeline[0]))
+mean = statistics.mean(AllDrugs)                   #hentaipog
+mode = statistics.mode(AllDrugs)
+median = statistics.mode(AllDrugs)
+
+remindedPeople = []
+NotRemindedPeople = []
+for kunai in savingsData:
+  if int(kunai[3])== 1:
+    remindedPeople.append(float(kunai[0]))
+  else:
+    NotRemindedPeople.append(float(kunai[0]))
+
+
+print(f"The mean of the reminded people saving is {statistics.mean(remindedPeople)}")
+
+print(f"The mode of the reminded people saving is {statistics.mode(remindedPeople)}")
+
+print(f"The median of the reminded people saving is {statistics.median(remindedPeople)}")
+
+
+print(f"The mean of the Not reminded people saving is {statistics.mean(NotRemindedPeople)}")
+
+print(f"The mode of the Not reminded people saving is {statistics.mode(NotRemindedPeople)}")
+
+print(f"The median of the Not reminded people saving is {statistics.median(NotRemindedPeople)}")
+
+print(f"The STD of the Reminded People saving is {statistics.stdev(remindedPeople)}")
+print(f"The STD of the Not reminded people saving is {statistics.stdev(NotRemindedPeople)}")
+print(f"The STD of the entire data saving is {statistics.stdev(AllDrugs)}")
+
+Age = []
+Saving = []
+for licking in savingsData:
+  if float(licking[5])!= 0:
+    Age.append(float(licking[5]))
+    Saving.append(float(licking[0]) )
+correlation = umom.corrcoef(Age,Saving)
+
+print(f"correlationg between the age of drugs and saving of drugs is {correlation[0,1]}")
+
+sns.boxplot(data = df, x = df["quant_saved"])   
+
+q1 = df["quant_saved"].quantile(0.25)
+q2 = df["quant_saved"].quantile(0.75)
+iqr = q2-q1
+
+print(f"q1-{q1}")
+print(f"q2-{q2}")
+print(f"IQR-{iqr}")
+
+LOL = q1-1.5*iqr
+UOL = q2+1.5*iqr
+
+print(f"LOL-{LOL}")
+print(f"UOL-{UOL}")
+
+NDHABF = df[df["quant_saved"]<UOL]
+NewSavings = NDHABF["quant_saved"].tolist()
+
+print(f"The mean of the New Drugs saved is {statistics.mean(NewSavings)}")
+
+print(f"The mode of the New Drugs saved is {statistics.mode(NewSavings)}")
+
+print(f"The median of the New Drugs saved is {statistics.median(NewSavings)}")
+
+print(f"The STD of the New Drugs saved is {statistics.stdev(NewSavings)}")
+
+fig = ff.create_distplot([NDHABF["quant_saved"].tolist()],["Saving without outliners :D"],show_hist = False)
+
+fig.show()
+
+sampling_mean_list = []
+for i in range(1000):
+  temp_list = []
+  for j in range(100):
+    temp_list.append(random.choice(NewSavings))
+  sampling_mean_list.append(statistics.mean(temp_list))
+
+mean_sampling = statistics.mean(sampling_mean_list)
+
+fig = ff.create_distplot([sampling_mean_list], ["Savings (Sampling)"], show_hist=False)
+fig.add_trace(go.Scatter(x=[mean_sampling, mean_sampling], y=[0, 0.1], mode="lines", name="MEAN"))
+fig.show()
+
+print(f"Standard deviation of the sampling data - {statistics.stdev(sampling_mean_list)}")
+print(f"Mean of Population - {statistics.mean(NewSavings)}")
+print(f"Mean of Sampling Distribution - {mean_sampling}")
+
+newDataFram69 = NDHABF[NDHABF.age!=0]
+age=newDataFram69["age"].tolist()
+NotunSaving = newDataFram69["quant_saved"].tolist()
+coro = umom.corrcoef(age,NotunSaving)
+z_score = (mean_sampling_reminded - mean_sampling_not_reminded) / stdev_sampling_not_reminded
+print(f"Z-Score is - {z_score}")
+
+print("so it is uhh" zscore)
+print(f"correlationg between the age of drugs and saving of drugs is {coro[0,1]}")
